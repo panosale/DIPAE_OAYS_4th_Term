@@ -36,7 +36,7 @@ kodikas ends
 dedomena segment
     n db 2
     message db "To apotelesma einai: $"
-    newline db ".", 10, 13, "$"
+    ;newline db ".", 10, 13, "$"    ; Gia mellontiki xrisi
 dedomena ends
 end start
 
