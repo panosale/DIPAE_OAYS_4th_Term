@@ -15,14 +15,17 @@ kodikas segment
 
         mov ax, bx  ; Store bx back to ax
         sub ax, cx  ; Sub cx from ax
-        add al, 1   ; Add 1 to ax
-        mov bx, ax  ; Temporary store ax to bx because BIOS destroys ax value after print message
+        inc ax      ; Increase ax by 1
+        ; or
+        ;add ax, 1   ; Add 1 to ax
 
         ; Standard series for seperate 2 digit number
         mov cl, 10  ; Move division 2nd operand to cl
         div cl      ; Div ax by cl (10)
-        mov bh, ah  ; Store div result on ah to bh (remaining)
-        mov bl, al  ; Store div result on al to bl (quotient)
+        mov bh, ah  ; Temporary store div result on ah to bh (remaining)
+        mov bl, al  ; Temporary store div result on al to bl (quotient)
+        ; or
+        ;mov bx, ax  ; Temporary store ax to bx because BIOS destroys ax value after print message
 
         lea dx, msg ; Print message standard series
         mov ah, 9   ; Print message standard series
@@ -44,8 +47,7 @@ kodikas segment
 kodikas ends
 
 dedomena segment
-    n db 5
+    n db 6
     msg db "To apotelesma einai: $"
 dedomena ends
 end start
-
