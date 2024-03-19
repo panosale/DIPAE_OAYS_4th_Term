@@ -32,7 +32,7 @@ kodikas segment
         cmp ah, 0       ; Check if given number is artios
         je artios       ; Check if given number is artios
         
-        jmp perittos    ; If givern numer is not zero or artios means its perittos
+        jmp perittos    ; If given number is not zero or artios then it means its perittos
         
         gave_wrong_entry:
         lea dx, wrong_entry ; Print message, standard instructions
