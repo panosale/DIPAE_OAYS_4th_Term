@@ -7,9 +7,9 @@ kodikas segment
         
         mov cl, 0   ; Initialize tries. Temporary use of cl
         
-        start_loop: ; do ... while loop - START
-        
-        ask_for_number:        
+    start_loop: ; do ... while loop - START
+    
+    ask_for_number:        
         lea dx, prompt_msg  ; Print message, standard instructions
         mov ah, 9           ; Print message, standard instructions
         int 21h             ; Print message, standard instructions
@@ -38,35 +38,35 @@ kodikas segment
         
         jmp perittos        ; If given number is not zero or artios then it means its perittos
         
-        gave_wrong_entry:
+    gave_wrong_entry:
         lea dx, wrong_entry ; Print message, standard instructions
         mov ah, 9h          ; Print message, standard instructions
         int 21h             ; Print message, standard instructions
         jmp ask_for_number  ; Ask for a new correct number
 
-        zero:
+    zero:
         lea dx, msg_miden   ; Print message, standard instructions
         mov ah, 9h          ; Print message, standard instructions
         int 21h             ; Print message, standard instructions
         jmp continue_loop   ; Ask for a new correct number
         
-        artios:
+    artios:
         lea dx, msg_artios  ; Print message, standard instructions
         mov ah, 9h          ; Print message, standard instructions
         int 21h             ; Print message, standard instructions
         jmp continue_loop
 
-        perittos:
+    perittos:
         lea dx, msg_perittos; Print message, standard instructions
         mov ah, 9h          ; Print message, standard instructions
         int 21h             ; Print message, standard instructions
         
-        continue_loop:      ; do ... while loop
+    continue_loop:      ; do ... while loop
         inc cl              ; Increase number of tries
         cmp cl, max_tries   ; Compare number of tries
         jb start_loop       ; Continue loop if tries are below max_tries
 
-        exit:
+    exit:
         mov ah, 4ch         ; Exit program, standard instructions
         int 21h             ; Exit program, standard instructions
 
