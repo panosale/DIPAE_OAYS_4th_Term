@@ -5,7 +5,7 @@ kodikas segment
         mov ax, dedomena
         mov ds, ax    
         
-        mov cl, 0   ; Initialize tries. Temporary use of cl
+        mov cl, 0           ; Initialize tries. Temporary use of cl
         
     start_loop: ; do ... while loop - START
     
