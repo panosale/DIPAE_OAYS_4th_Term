@@ -46,7 +46,7 @@ kodikas segment
         mov BUFFER[si], al
         inc si
         cmp si, 40
-;        je emfanisi ;;; den xreiazetai
+;        je emfanisi ;;; den xreiazetai    ??
         loop start_loop
         
     enter_pressed:
@@ -62,9 +62,22 @@ kodikas segment
     loop_emfanisis:
         mov dl, [bx]
         inc bx
-        mov ah, 2h                  ; Print character, standard instructions
-        int 21h                     ; Print character, standard instructions
-        loop loop_emfanisis
+        
+        cmp dl, ' '                 ; Check if current character is space
+        je emfanisi_allagmenou_charaktira 
+        cmp dl, '.'                 ; Check if current character is .
+        je emfanisi_allagmenou_charaktira
+        
+        cmp dl, 'a'                 ; Check if character is in lowercase
+        jae convert_to_uppercase    ; If in lowercase then convert to uppercase
+        add dl, 32                  ; Else convert current character to lowerercase
+        jmp emfanisi_allagmenou_charaktira
+        convert_to_uppercase:       ; Convert current character to uppercase
+            sub dl, 32 
+        emfanisi_allagmenou_charaktira:
+            mov ah, 2h                  ; Print character, standard instructions
+            int 21h                     ; Print character, standard instructions
+            loop loop_emfanisis
         jmp exit                    
         
     no_text_given:
