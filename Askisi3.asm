@@ -55,6 +55,12 @@ kodikas segment
         lea dx, MSG_CONVERTED_TEXT  ; Print message, standard instructions
         mov ah, 9h                  ; Print message, standard instructions
         int 21h                     ; Print message, standard instructions
+        mov cx, si
+    loop_emfanisis:
+        lea dx, BUFFER[si] + 32     ; Print message, standard instructions
+        mov ah, 9h                  ; Print message, standard instructions
+        int 21h                     ; Print message, standard instructions
+        jcxz loop_emfanisis
         jmp exit                    
         
     no_text_given:
@@ -93,7 +99,7 @@ kodikas ends
 
 dedomena segment     
     MAX_BUFFER_SIZE db 40          
-    BUFFER db MAX_BUFFER_SIZE dup(0)
+    BUFFER db 40 dup(0)
     
     PROMPT_MSG db "Eisagete keimeno (A-Z, a-z,teleia, space): $"
     MSG_CONVERTED_TEXT db 10, 13, "To keimeno meta tin metatropi: $"
