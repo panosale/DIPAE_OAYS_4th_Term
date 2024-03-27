@@ -19,28 +19,28 @@ kodikas segment
         mov ah, 1h          ; Ask for a character, standard instructions
         int 21h             ; Ask for a character, standard instructions
         
-        cmp al, 13
-        je enter_pressed
+        cmp al, 13          ; Compare given character to Enter
+        je enter_pressed    ; Finish the prompt
 
-        cmp al, ' '         ; Compare given character to space
-        je save_to_buffer 
+        cmp al, ' '         ; Compare given character to Space
+        je save_to_buffer   ; And save it to baffer 
         
         cmp al, '.'         ; Compare given character to .
-        je save_to_buffer
+        je save_to_buffer   ; And save it to baffer
         
-        cmp al, 'A'
-        jb start_loop
+        cmp al, 'A'         ; Check if given character is below 'A'
+        jb start_loop       ; And ask again
         
-        cmp al, 'Z'
-        jbe save_to_buffer
+        cmp al, 'Z'         ; Check if given character is below or equal to 'Z'
+        jbe save_to_buffer  ; And save it to baffer
 
-        cmp al, 'a'
-        jb ask_for_text
+        cmp al, 'a'         ; Check if given character is below 'a'
+        jb ask_for_text     ; And ask again
         
         cmp al, 'z'
-        jbe save_to_buffer
+        jbe save_to_buffer  ; And save it to baffer
         
-        jmp ask_for_text        
+        jmp ask_for_text            
         
     save_to_buffer:
         mov BUFFER[si], al
@@ -57,14 +57,14 @@ kodikas segment
         mov ah, 9h                  ; Print message, standard instructions
         int 21h                     ; Print message, standard instructions
         
-                                    ; Start print BUFFER instructions
+                                    ; Start print BUFFER procedure
         mov cx, si                  ; Initialize counter for BUFFER print with loop
         lea bx, BUFFER              ; Print BUFFER instructions
     loop_emfanisis:
         mov dl, [bx]
         inc bx
         
-        cmp dl, ' '                 ; Check if current character is space
+        cmp dl, ' '                 ; Check if current character is Space
         je emfanisi_allagmenou_charaktira 
         cmp dl, '.'                 ; Check if current character is .
         je emfanisi_allagmenou_charaktira
@@ -73,12 +73,15 @@ kodikas segment
         jae convert_to_uppercase    ; If in lowercase then convert to uppercase
         add dl, 32                  ; Else convert current character to lowerercase
         jmp emfanisi_allagmenou_charaktira
+        
         convert_to_uppercase:       ; Convert current character to uppercase
-            sub dl, 32 
+            sub dl, 32
+             
         emfanisi_allagmenou_charaktira:
-            mov ah, 2h                  ; Print character, standard instructions
-            int 21h                     ; Print character, standard instructions
+            mov ah, 2h              ; Print character, standard instructions
+            int 21h                 ; Print character, standard instructions
             loop loop_emfanisis
+            
         jmp exit                    
         
     no_text_given:
