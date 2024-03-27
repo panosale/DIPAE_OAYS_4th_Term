@@ -13,7 +13,7 @@ kodikas segment
         mov ah, 9           ; Print message, standard instructions
         int 21h             ; Print message, standard instructions
         
-    start_loop: ; do ... while loop - START
+    start_loop:
     
     ask_for_text:        
         mov ah, 1h          ; Ask for a character, standard instructions
@@ -22,34 +22,34 @@ kodikas segment
         cmp al, 13          ; Compare given character to Enter
         je enter_pressed    ; Finish the prompt. Exit loop
 
-        cmp al, ' '         ; Compare given character to Space
-        je save_to_buffer   ; And save it to baffer 
+        cmp al, ' '         ; Compare given character to Space...
+        je save_to_buffer   ; ...and save it to buffer 
         
-        cmp al, '.'         ; Compare given character to .
-        je save_to_buffer   ; And save it to baffer
+        cmp al, '.'         ; Compare given character to Point(.)...
+        je save_to_buffer   ; ...and save it to baffer
         
-        cmp al, 'A'         ; Check if given character is below 'A'
-        jb start_loop       ; And ask again
+        cmp al, 'A'         ; Check if given character is below 'A'...
+        jb start_loop       ; ...and ask again
         
-        cmp al, 'Z'         ; Check if given character is below or equal to 'Z'
-        jbe save_to_buffer  ; And save it to baffer
+        cmp al, 'Z'         ; Check if given character is below or equal to 'Z'...
+        jbe save_to_buffer  ; ...and save it to baffer
 
-        cmp al, 'a'         ; Check if given character is below 'a'
-        jb ask_for_text     ; And ask again
+        cmp al, 'a'         ; Check if given character is below 'a'...
+        jb ask_for_text     ; ...and ask again
         
-        cmp al, 'z'         ; Check if given character is below or equal to 'z'
-        jbe save_to_buffer  ; And save it to baffer
+        cmp al, 'z'         ; Check if given character is below or equal to 'z'...
+        jbe save_to_buffer  ; ...and save it to baffer
         
-        jmp ask_for_text    ; None of above happedn so continue to ask for characters            
+        jmp ask_for_text    ; None of above happened so continue to ask for characters            
         
     save_to_buffer:
-        mov BUFFER[si], al  ; Save given-checked character to position [si] of BUFFER
+        mov BUFFER[si], al  ; Save given & checked character to position [si] of BUFFER
         inc si              ; Increase BUFFER index [si] by 1
         loop start_loop     ; Continue loop until 40 characters have been given (cx = 0)
         
     enter_pressed:
-        cmp si, 0           ; Check if no text given
-        je no_text_given    ; And show message
+        cmp si, 0           ; Check if no text given...
+        je no_text_given    ; ...and show message
         
     emfanisi:
         lea dx, MSG_CONVERTED_TEXT  ; Print message, standard instructions
@@ -61,8 +61,8 @@ kodikas segment
         lea bx, BUFFER              ; Print BUFFER instructions 
         
     loop_emfanisis:
-        mov dl, [bx]
-        inc bx
+        mov dl, [bx]                ; Add content of bx address to dl
+        inc bx                      ; Increase bx address by 1
         
         cmp dl, ' '                 ; Check if current character is Space
         je emfanisi_allagmenou_charaktira 
@@ -70,8 +70,8 @@ kodikas segment
         je emfanisi_allagmenou_charaktira
         
         cmp dl, 'a'                 ; Check if character is in lowercase
-        jae convert_to_uppercase    ; If in lowercase then convert to uppercase
-        add dl, 32                  ; Else convert current character to lowerercase
+        jae convert_to_uppercase    ; If in lowercase then convert to uppercase...
+        add dl, 32                  ; ...else convert current character to lowerercase
         jmp emfanisi_allagmenou_charaktira
         
         convert_to_uppercase:       ; Convert current character to uppercase
@@ -80,9 +80,9 @@ kodikas segment
         emfanisi_allagmenou_charaktira:
             mov ah, 2h              ; Print character, standard instructions
             int 21h                 ; Print character, standard instructions
-            loop loop_emfanisis
+            loop loop_emfanisis     ; Continue loop until all characters finish (cx = 0)
             
-        jmp exit                    
+        jmp exit                    ; Print finished. End program                    
         
     no_text_given:
         lea dx, MSG_NO_TEXT         ; Print message, standard instructions
