@@ -6,8 +6,8 @@ kodikas segment
         mov ax, dedomena
         mov ds, ax    
         
-        mov si, 0       ; Initialize index
-        mov cx, 40      ; Initialize CX index for loop
+        mov si, 0           ; Initialize index
+        mov cx, 40          ; Initialize CX index for loop
         
         lea dx, PROMPT_MSG  ; Print message, standard instructions
         mov ah, 9           ; Print message, standard instructions
@@ -19,13 +19,13 @@ kodikas segment
         mov ah, 1h          ; Ask for a character, standard instructions
         int 21h             ; Ask for a character, standard instructions
         
-        cmp al, 13          ; Compare given character to Enter
+        cmp al, 13          ; Compare given character with Enter
         je enter_pressed    ; Finish the prompt. Exit loop
 
-        cmp al, ' '         ; Compare given character to Space...
+        cmp al, ' '         ; Compare given character with Space...
         je save_to_buffer   ; ...and save it to buffer 
         
-        cmp al, '.'         ; Compare given character to Point(.)...
+        cmp al, '.'         ; Compare given character with Point(.)...
         je save_to_buffer   ; ...and save it to baffer
         
         cmp al, 'A'         ; Check if given character is below 'A'...
@@ -50,12 +50,12 @@ kodikas segment
     enter_pressed:
         cmp si, 0           ; Check if no text given...
         je no_text_given    ; ...and show message
-        
+                            ; ...else continue on showing converted text
     emfanisi:
         lea dx, MSG_CONVERTED_TEXT  ; Print message, standard instructions
         mov ah, 9h                  ; Print message, standard instructions
         int 21h                     ; Print message, standard instructions
-        
+
                                     ; Start print BUFFER procedure
         mov cx, si                  ; Initialize counter for BUFFER print with loop
         lea bx, BUFFER              ; Print BUFFER instructions 
@@ -64,12 +64,12 @@ kodikas segment
         mov dl, [bx]                ; Add content of bx address to dl
         inc bx                      ; Increase bx address by 1
         
-        cmp dl, ' '                 ; Check if current character is Space
+        cmp dl, ' '                 ; Check if current character is Space...
         je emfanisi_allagmenou_charaktira 
-        cmp dl, '.'                 ; Check if current character is .
+        cmp dl, '.'                 ; ...else check if current character is Point(.)...
         je emfanisi_allagmenou_charaktira
         
-        cmp dl, 'a'                 ; Check if character is in lowercase
+        cmp dl, 'a'                 ; ...else check if character is in lowercase
         jae convert_to_uppercase    ; If in lowercase then convert to uppercase...
         add dl, 32                  ; ...else convert current character to lowercase (ascii + 32)
         jmp emfanisi_allagmenou_charaktira
@@ -80,7 +80,7 @@ kodikas segment
         emfanisi_allagmenou_charaktira:
             mov ah, 2h              ; Print character, standard instructions
             int 21h                 ; Print character, standard instructions
-            loop loop_emfanisis     ; Continue loop until all characters finish (cx = 0)
+        loop loop_emfanisis         ; Continue loop until all characters finish (cx = 0)
             
         jmp exit                    ; Print finished. End program                    
         
