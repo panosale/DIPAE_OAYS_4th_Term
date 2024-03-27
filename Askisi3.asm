@@ -46,7 +46,6 @@ kodikas segment
         mov BUFFER[si], al
         inc si
         cmp si, 40
-;        je emfanisi ;;; den xreiazetai    ??
         loop start_loop
         
     enter_pressed:
@@ -57,8 +56,10 @@ kodikas segment
         lea dx, MSG_CONVERTED_TEXT  ; Print message, standard instructions
         mov ah, 9h                  ; Print message, standard instructions
         int 21h                     ; Print message, standard instructions
-        mov cx, si
-        lea bx, BUFFER     ; Print message, standard instructions
+        
+                                    ; Start print BUFFER instructions
+        mov cx, si                  ; Initialize counter for BUFFER print with loop
+        lea bx, BUFFER              ; Print BUFFER instructions
     loop_emfanisis:
         mov dl, [bx]
         inc bx
@@ -84,29 +85,6 @@ kodikas segment
         lea dx, MSG_NO_TEXT         ; Print message, standard instructions
         mov ah, 9h                  ; Print message, standard instructions
         int 21h                     ; Print message, standard instructions
-        jmp exit
-                            
-;    gave_wrong_entry:
-;        lea dx, wrong_entry ; Print message, standard instructions
-;        mov ah, 9h          ; Print message, standard instructions
-;        int 21h             ; Print message, standard instructions
-;        jmp ask_for_number  ; Ask for a new correct number
-
-    ;artios:
-;        lea dx, msg_artios  ; Print message, standard instructions
-;        mov ah, 9h          ; Print message, standard instructions
-;        int 21h             ; Print message, standard instructions
-;        jmp continue_loop
-
-;    perittos:
-;        lea dx, msg_perittos; Print message, standard instructions
-;        mov ah, 9h          ; Print message, standard instructions
-;        int 21h             ; Print message, standard instructions
-        
-;    continue_loop:      ; do ... while loop
-;        inc cl              ; Increase number of tries
-;        cmp cl, max_tries   ; Compare number of tries
-;        jb start_loop       ; Continue loop if tries are below max_tries
 
     exit:
         mov ah, 4ch         ; Exit program, standard instructions
