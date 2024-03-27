@@ -23,22 +23,22 @@ kodikas segment
         je enter_pressed    ; Finish the prompt. Exit loop
 
         cmp al, ' '         ; Compare given character with Space...
-        je save_to_buffer   ; ...and save it to buffer 
+        je save_to_buffer   ; ...and save it to BUFFER 
         
         cmp al, '.'         ; Compare given character with Point(.)...
-        je save_to_buffer   ; ...and save it to baffer
+        je save_to_buffer   ; ...and save it to BUFFER
         
         cmp al, 'A'         ; Check if given character is below 'A'...
         jb start_loop       ; ...and ask again
         
         cmp al, 'Z'         ; Check if given character is below or equal to 'Z'...
-        jbe save_to_buffer  ; ...and save it to baffer
+        jbe save_to_buffer  ; ...and save it to BUFFER
 
         cmp al, 'a'         ; Check if given character is below 'a'...
         jb ask_for_text     ; ...and ask again
         
         cmp al, 'z'         ; Check if given character is below or equal to 'z'...
-        jbe save_to_buffer  ; ...and save it to baffer
+        jbe save_to_buffer  ; ...and save it to BUFFER
         
         jmp ask_for_text    ; None of above happened so continue to ask for characters            
         
