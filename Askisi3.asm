@@ -40,6 +40,8 @@ kodikas segment
         cmp al, 'z'
         jbe save_to_buffer
         
+        jmp ask_for_text        
+        
     save_to_buffer:
         mov BUFFER[si], al
         inc si
@@ -56,11 +58,13 @@ kodikas segment
         mov ah, 9h                  ; Print message, standard instructions
         int 21h                     ; Print message, standard instructions
         mov cx, si
+        lea bx, BUFFER     ; Print message, standard instructions
     loop_emfanisis:
-        lea dx, BUFFER[si] + 32     ; Print message, standard instructions
-        mov ah, 9h                  ; Print message, standard instructions
-        int 21h                     ; Print message, standard instructions
-        jcxz loop_emfanisis
+        mov dl, [bx]
+        inc bx
+        mov ah, 2h                  ; Print character, standard instructions
+        int 21h                     ; Print character, standard instructions
+        loop loop_emfanisis
         jmp exit                    
         
     no_text_given:
