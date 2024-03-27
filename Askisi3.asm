@@ -20,7 +20,7 @@ kodikas segment
         int 21h             ; Ask for a character, standard instructions
         
         cmp al, 13          ; Compare given character to Enter
-        je enter_pressed    ; Finish the prompt
+        je enter_pressed    ; Finish the prompt. Exit loop
 
         cmp al, ' '         ; Compare given character to Space
         je save_to_buffer   ; And save it to baffer 
@@ -37,20 +37,19 @@ kodikas segment
         cmp al, 'a'         ; Check if given character is below 'a'
         jb ask_for_text     ; And ask again
         
-        cmp al, 'z'
+        cmp al, 'z'         ; Check if given character is below or equal to 'z'
         jbe save_to_buffer  ; And save it to baffer
         
-        jmp ask_for_text            
+        jmp ask_for_text    ; None of above happedn so continue to ask for characters            
         
     save_to_buffer:
-        mov BUFFER[si], al
-        inc si
-        cmp si, 40
-        loop start_loop
+        mov BUFFER[si], al  ; Save given-checked character to position [si] of BUFFER
+        inc si              ; Increase BUFFER index [si] by 1
+        loop start_loop     ; Continue loop until 40 characters have been given (cx = 0)
         
     enter_pressed:
-        cmp si, 0
-        je no_text_given
+        cmp si, 0           ; Check if no text given
+        je no_text_given    ; And show message
         
     emfanisi:
         lea dx, MSG_CONVERTED_TEXT  ; Print message, standard instructions
@@ -59,7 +58,8 @@ kodikas segment
         
                                     ; Start print BUFFER procedure
         mov cx, si                  ; Initialize counter for BUFFER print with loop
-        lea bx, BUFFER              ; Print BUFFER instructions
+        lea bx, BUFFER              ; Print BUFFER instructions 
+        
     loop_emfanisis:
         mov dl, [bx]
         inc bx
