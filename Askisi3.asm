@@ -13,7 +13,7 @@ kodikas segment
         mov ah, 9           ; Print message, standard instructions
         int 21h             ; Print message, standard instructions
         
-    start_loop:
+    start_loop:             ; Main prompt for character loop
     
     ask_for_text:        
         mov ah, 1h          ; Ask for a character, standard instructions
@@ -71,11 +71,11 @@ kodikas segment
         
         cmp dl, 'a'                 ; Check if character is in lowercase
         jae convert_to_uppercase    ; If in lowercase then convert to uppercase...
-        add dl, 32                  ; ...else convert current character to lowerercase
+        add dl, 32                  ; ...else convert current character to lowercase (ascii + 32)
         jmp emfanisi_allagmenou_charaktira
         
-        convert_to_uppercase:       ; Convert current character to uppercase
-            sub dl, 32
+        convert_to_uppercase:       
+            sub dl, 32              ; Convert current character to uppercase (ascii - 32)
              
         emfanisi_allagmenou_charaktira:
             mov ah, 2h              ; Print character, standard instructions
