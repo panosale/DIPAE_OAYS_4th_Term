@@ -96,7 +96,6 @@ kodikas segment
 kodikas ends
 
 dedomena segment     
-    ; MAX_BUFFER_SIZE db 40         ; NO NEED. FOR DEL?
     BUFFER db 40 dup(0)
     
     PROMPT_MSG db "Eisagete keimeno (A-Z, a-z,teleia, space): $"
