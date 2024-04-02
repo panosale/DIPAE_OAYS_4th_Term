@@ -1,55 +1,86 @@
 title askisi4
+assume cs: kodikas, ds: dedomena, ss: soros
 kodikas segment
-    assume cs: kodikas, ds: dedomena
-    start:
-        mov ax, dedomena
-        mov ds, ax    
+    main proc near
+            mov ax, dedomena
+            mov ds, ax    
+            
+            mov si, 0                   ; Initialize index
+            mov cx, 80                  ; Initialize CX index for loop
+            
+            lea dx, PROMPT_MSG1         ; Print message, standard instructions
+            mov ah, 9                   ; Print message, standard instructions
+            int 21h                     ; Print message, standard instructions
+            
+        start_loop:                     ; Main prompt for character loop
         
-        mov si, 0                   ; Initialize index
-        mov cx, 40                  ; Initialize CX index for loop
-        
-        lea dx, PROMPT_MSG          ; Print message, standard instructions
-        mov ah, 9                   ; Print message, standard instructions
-        int 21h                     ; Print message, standard instructions
-        
-    start_loop:                     ; Main prompt for character loop
+        ask_for_text:        
+            mov ah, 1h                  ; Ask for a character, standard instructions
+            int 21h                     ; Ask for a character, standard instructions
+            
+            cmp al, '#'                 ; Compare given character with Sharp (#)
+            je sharp_pressed            ; Finish the prompt. Exit loop
+            
+        save_to_buffer:
+            mov BUFFER[si], al          ; Save given & checked character to position [si] of BUFFER
+            inc si                      ; Increase BUFFER index [si] by 1
+            loop start_loop             ; Continue loop until 80 characters have been given (cx = 0)
+            
+        sharp_pressed:
+            cmp si, 0                   ; Check if no text given...
+            je no_text_given            ; ...and show message
+            call check-given-char       ; ...else continue
+            
+        no_text_given:
+            lea dx, MSG_NO_TEXT         ; Print message, standard instructions
+            mov ah, 9h                  ; Print message, standard instructions
+            int 21h                     ; Print message, standard instructions
     
-    ask_for_text:        
-        mov ah, 1h                  ; Ask for a character, standard instructions
-        int 21h                     ; Ask for a character, standard instructions
+        exit:
+            mov ah, 4ch                 ; Exit program, standard instructions
+            int 21h                     ; Exit program, standard instructions
+    main endp
+    
+    check-given-char proc near
+        lea dx, PROMPT_MSG2             ; Print message, standard instructions
+        mov ah, 9                       ; Print message, standard instructions
+        int 21h                         ; Print message, standard instructions
         
-        cmp al, 13                  ; Compare given character with Enter
-        je enter_pressed            ; Finish the prompt. Exit loop
+        mov cx, si
+        mov bx, 0                       ; Initialize counter for BUFFER print with loop
+        mov si, 0                       ; Print BUFFER instructions 
+       
+        mov ah, 1h                      ; Ask for a character, standard instructions
+        int 21h                         ; Ask for a character, standard instructions
 
-        cmp al, ' '                 ; Compare given character with Space...
-        je save_to_buffer           ; ...and save it to BUFFER 
-        
-        cmp al, '.'                 ; Compare given character with Point(.)...
-        je save_to_buffer           ; ...and save it to BUFFER
-        
-        cmp al, 'A'                 ; Check if given character is below 'A'...
-        jb start_loop               ; ...and ask again
-        
-        cmp al, 'Z'                 ; Check if given character is below or equal to 'Z'...
-        jbe save_to_buffer          ; ...and save it to BUFFER
+        mov dl, BUFFER[si]              ; Add content of bx address to dl
+        loop_elegxou:
+            cmp dl, al
+            je character_found
+            loop loop_elegxou
+        character_found:
+            inc bx
+        mov dl, BUFFER[si]              ; Add content of bx address to dl
+        inc si                          ; Increase bx address by 1
+        loop loop_elegxou        
+    check-given-char endp        
+    
+kodikas ends
 
-        cmp al, 'a'                 ; Check if given character is below 'a'...
-        jb ask_for_text             ; ...and ask again
-        
-        cmp al, 'z'                 ; Check if given character is below or equal to 'z'...
-        jbe save_to_buffer          ; ...and save it to BUFFER
-        
-        jmp ask_for_text            ; None of above happened so continue to ask for characters            
-        
-    save_to_buffer:
-        mov BUFFER[si], al          ; Save given & checked character to position [si] of BUFFER
-        inc si                      ; Increase BUFFER index [si] by 1
-        loop start_loop             ; Continue loop until 40 characters have been given (cx = 0)
-        
-    enter_pressed:
-        cmp si, 0                   ; Check if no text given...
-        je no_text_given            ; ...and show message
-                                    ; ...else continue on showing converted text
+soros segment stack
+    db 256 dup(0)
+soros ends
+
+dedomena segment     
+    BUFFER db 80 dup(0)
+    
+    PROMPT_MSG1 db "Dose ena keimeno mexri 80 xaraktires (# = eksodos): $"
+    PROMPT_MSG2 db 10, 13, "Dose enan xaraktira gia anazitisi: $"
+    MSG_NO_TEXT db 10, 13, "Den dosate kanena keimeno.$"
+dedomena ends
+end main
+
+; NO USE. FOR DEL
     emfanisi:
         lea dx, MSG_CONVERTED_TEXT  ; Print message, standard instructions
         mov ah, 9h                  ; Print message, standard instructions
@@ -83,22 +114,3 @@ kodikas segment
             
         jmp exit                    ; Print finished. End program                    
         
-    no_text_given:
-        lea dx, MSG_NO_TEXT         ; Print message, standard instructions
-        mov ah, 9h                  ; Print message, standard instructions
-        int 21h                     ; Print message, standard instructions
-
-    exit:
-        mov ah, 4ch                 ; Exit program, standard instructions
-        int 21h                     ; Exit program, standard instructions
-
-kodikas ends
-
-dedomena segment     
-    BUFFER db 40 dup(0)
-    
-    PROMPT_MSG db "Eisagete keimeno (A-Z, a-z,teleia, space): $"
-    MSG_CONVERTED_TEXT db 10, 13, "To keimeno meta tin metatropi: $"
-    MSG_NO_TEXT db 10, 13, "Den dosate kanena keimeno.$"
-dedomena ends
-end start
