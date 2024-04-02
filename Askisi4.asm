@@ -30,7 +30,7 @@ kodikas segment
             cmp si, 0                   ; Check if no text given...
             je no_text_given            ; ...and show message
             call check-given-char       ; ...else continue
-            
+            jmp exit            
         no_text_given:
             lea dx, MSG_NO_TEXT         ; Print message, standard instructions
             mov ah, 9h                  ; Print message, standard instructions
@@ -53,66 +53,72 @@ kodikas segment
         mov ah, 1h                      ; Ask for a character, standard instructions
         int 21h                         ; Ask for a character, standard instructions
 
-        mov dl, BUFFER[si]              ; Add content of bx address to dl
         loop_elegxou:
-            cmp dl, al
-            je character_found
             mov dl, BUFFER[si]              ; Add content of bx address to dl
             inc si                          ; Increase bx address by 1
-            loop loop_elegxou
-        character_found:
-            inc bx
-        mov dl, BUFFER[si]              ; Add content of bx address to dl
-        inc si                          ; Increase bx address by 1
-        loop loop_elegxou        
+
+            cmp dl, al
+            jne character_not_found
+            inc bx            
+            character_not_found:
+        loop loop_elegxou
+        
+        mov TMP_CHAR, al     
+        mov ax, bx
+        ; Standard series for seperate 2 digit number
+        mov cl, 10  ; Move division 2nd operand to cl
+        div cl      ; Div ax by cl (10)
+        mov bh, ah  ; Temporary store div result on ah to bh (remaining)
+        mov bl, al  ; Temporary store div result on al to bl (quotient)
+
+        lea dx, RESULT_MSG1             ; Print message, standard instructions
+        mov ah, 9                       ; Print message, standard instructions
+        int 21h                         ; Print message, standard instructions
+
+        mov ax, 0
+        mov al, TMP_CHAR
+        lea dx, ax         
+        mov ah, 2                       ; Print message, standard instructions
+        int 21h                         ; Print message, standard instructions
+
+        lea dx, RESULT_MSG2             ; Print message, standard instructions
+        mov ah, 9                       ; Print message, standard instructions
+        int 21h                         ; Print message, standard instructions
+
+        mov dl, bl  ; Print number standard series (1st digit)
+        add dl, 48  ; Print number standard series (1st digit)
+        mov ah, 2   ; Print number standard series (1st digit)
+        int 21h     ; Print number standard series (1st digit)
+        cmp bx, 9
+        jna dont_print_second_character
+        mov dl, bh  ; Print number standard series (2nd digit)
+        add dl, 48  ; Print number standard series (2nd digit)
+        mov ah, 2   ; Print number standard series (2nd digit)
+        int 21h     ; Print number standard series (2nd digit)
+        lea dx, RESULT_MSG3             ; Print message, standard instructions
+        mov ah, 9                       ; Print message, standard instructions
+        int 21h                         ; Print message, standard instructions
+    dont_print_second_character:        
+        ret        
     check-given-char endp        
     
 kodikas ends
+
+dedomena segment     
+    BUFFER db 80 dup(0)
+    TMP_CHAR db 2 dup(0)
+        
+    PROMPT_MSG1 db "Dose ena keimeno mexri 80 xaraktires (# = eksodos): $"
+    PROMPT_MSG2 db 10, 13, "Dose enan xaraktira gia anazitisi: $"
+    RESULT_MSG1 db 10,13, "O charaktiras [$"
+    RESULT_MSG2 db "] vrethike [$"
+    RESULT_MSG3 db "] fores.$"
+    MSG_NO_TEXT db "Den dosate kanena keimeno.$"
+dedomena ends
 
 soros segment stack
     db 256 dup(0)
 soros ends
 
-dedomena segment     
-    BUFFER db 80 dup(0)
-    
-    PROMPT_MSG1 db "Dose ena keimeno mexri 80 xaraktires (# = eksodos): $"
-    PROMPT_MSG2 db 10, 13, "Dose enan xaraktira gia anazitisi: $"
-    MSG_NO_TEXT db 10, 13, "Den dosate kanena keimeno.$"
-dedomena ends
 end main
 
-; NO USE. FOR DEL
-    emfanisi:
-        lea dx, MSG_CONVERTED_TEXT  ; Print message, standard instructions
-        mov ah, 9h                  ; Print message, standard instructions
-        int 21h                     ; Print message, standard instructions
-
-                                    ; Start print BUFFER procedure
-        mov cx, si                  ; Initialize counter for BUFFER print with loop
-        lea bx, BUFFER              ; Print BUFFER instructions 
-        
-    loop_emfanisis:
-        mov dl, [bx]                ; Add content of bx address to dl
-        inc bx                      ; Increase bx address by 1
-        
-        cmp dl, ' '                 ; Check if current character is Space...
-        je emfanisi_allagmenou_charaktira 
-        cmp dl, '.'                 ; ...else check if current character is Point(.)...
-        je emfanisi_allagmenou_charaktira
-        
-        cmp dl, 'a'                 ; ...else check if character is in lowercase
-        jae convert_to_uppercase    ; If in lowercase then convert to uppercase...
-        add dl, 32                  ; ...else convert current character to lowercase (ascii + 32)
-        jmp emfanisi_allagmenou_charaktira
-        
-        convert_to_uppercase:       
-            sub dl, 32              ; Convert current character to uppercase (ascii - 32)
-             
-        emfanisi_allagmenou_charaktira:
-            mov ah, 2h              ; Print character, standard instructions
-            int 21h                 ; Print character, standard instructions
-        loop loop_emfanisis         ; Continue loop until all characters finish (cx = 0)
-            
-        jmp exit                    ; Print finished. End program                    
-        
