@@ -57,6 +57,8 @@ kodikas segment
         loop_elegxou:
             cmp dl, al
             je character_found
+            mov dl, BUFFER[si]              ; Add content of bx address to dl
+            inc si                          ; Increase bx address by 1
             loop loop_elegxou
         character_found:
             inc bx
