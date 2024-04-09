@@ -67,6 +67,10 @@ kodikas segment
         mov TMP_RESULT_H, bh
         mov TMP_RESULT_L, bl
         mov ax, bx
+        ; **** EDO ELEGXOS AN DEN VRETHIKE O XARAKTIRAS
+        
+        
+        ; **** NA ELEGXO AN EINAI 1 H 2 PSIFIA KAI ANALOGA NA TYPONETAI
         ; Standard series for seperate 2 digit number
         mov cl, 10  ; Move division 2nd operand to cl
         div cl      ; Div ax by cl (10)
@@ -119,7 +123,7 @@ dedomena segment
         
     PROMPT_MSG1 db "Dose ena keimeno mexri 80 xaraktires (# = eksodos): $"
     PROMPT_MSG2 db 10, 13, "Dose enan xaraktira gia anazitisi: $"
-    RESULT_MSG1 db 10,13, "O charaktiras [$"
+    RESULT_MSG1 db 10, 13, "O charaktiras [$"
     RESULT_MSG2 db "] vrethike [$"
     RESULT_MSG3 db "] fores.$"
     MSG_NO_TEXT db "Den dosate kanena keimeno.$"
@@ -130,4 +134,3 @@ soros segment stack
 soros ends
 
 end main
-
