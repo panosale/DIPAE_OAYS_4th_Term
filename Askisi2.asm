@@ -1,21 +1,21 @@
 title askisi2
+start:
+assume cs: kodikas, ds: dedomena
 kodikas segment
-    assume cs: kodikas, ds: dedomena
-    start:
-        mov ax, dedomena ; Declaration of data segment standard sequence
-        mov ds, ax ; Declaration of data segment standard sequence
+        mov ax, dedomena    ; Standard instructions for declaration of data segment 1/2
+        mov ds, ax          ; Standard instructions for declaration of data segment 2/2
         
         mov cl, 0           ; Initialize tries. Temporary use of cl
         
-    start_loop: ; do ... while loop - START
+    start_loop:             ; do ... while loop - START
     
     ask_for_number:        
-        lea dx, prompt_msg  ; Print message, standard instructions
-        mov ah, 9           ; Print message, standard instructions
-        int 21h             ; Print message, standard instructions
+        lea dx, prompt_msg  ; Print message, standard instructions 1/3
+        mov ah, 9           ; Print message, standard instructions 2/3
+        int 21h             ; Print message, standard instructions 3/3
         
-        mov ah, 8h          ; Ask for a number, standard instructions
-        int 21h             ; Ask for a number, standard instructions
+        mov ah, 8h          ; Ask for a number, standard instructions 1/2
+        int 21h             ; Ask for a number, standard instructions 2/2
         
         cmp al, '0'         ; Compare given number to 0
         jb gave_wrong_entry ; Check if given number is below 0 (compares ASCII codes)
@@ -23,12 +23,13 @@ kodikas segment
         cmp al, '9'         ; Copmare given number to 9
         ja gave_wrong_entry ; Check if given number is above 9 (compares ASCII codes)
         
-        mov dl, al          ; Given number is correct and can be printed
-        mov ah, 2h          ; Given number is correct and can be printed
-        int 21h             ; Given number is correct and can be printed
+        ; Given number is correct and can be printed
+        mov dl, al          ; Print number, standard instructions 1/3
+        mov ah, 2h          ; Print number, standard instructions 2/3
+        int 21h             ; Print number, standard instructions 3/3
 
         cmp al, '0'         ; Check if given number is zero
-        je zero             ; Check if given number is zero
+        je zero             ; If given number is zero jump to "zero"
         
         mov bl, 2           ; Check if given number is artios
         mov ah, 0           ; Check if given number is artios
@@ -39,27 +40,27 @@ kodikas segment
         jmp perittos        ; If given number is not zero or artios then it means its perittos
         
     gave_wrong_entry:
-        lea dx, wrong_entry ; Print message, standard instructions
-        mov ah, 9h          ; Print message, standard instructions
-        int 21h             ; Print message, standard instructions
+        lea dx, wrong_entry ; Print message, standard instructions 1/3
+        mov ah, 9h          ; Print message, standard instructions 2/3
+        int 21h             ; Print message, standard instructions 3/3
         jmp ask_for_number  ; Ask for a new correct number
 
     zero:
-        lea dx, msg_miden   ; Print message, standard instructions
-        mov ah, 9h          ; Print message, standard instructions
-        int 21h             ; Print message, standard instructions
+        lea dx, msg_miden   ; Print message, standard instructions 1/3
+        mov ah, 9h          ; Print message, standard instructions 2/3
+        int 21h             ; Print message, standard instructions 3/3
         jmp continue_loop   ; Ask for a new correct number
         
     artios:
-        lea dx, msg_artios  ; Print message, standard instructions
-        mov ah, 9h          ; Print message, standard instructions
-        int 21h             ; Print message, standard instructions
+        lea dx, msg_artios  ; Print message, standard instructions 1/3
+        mov ah, 9h          ; Print message, standard instructions 2/3
+        int 21h             ; Print message, standard instructions 3/3
         jmp continue_loop
 
     perittos:
-        lea dx, msg_perittos; Print message, standard instructions
-        mov ah, 9h          ; Print message, standard instructions
-        int 21h             ; Print message, standard instructions
+        lea dx, msg_perittos; Print message, standard instructions 1/3
+        mov ah, 9h          ; Print message, standard instructions 2/3
+        int 21h             ; Print message, standard instructions 3/3
         
     continue_loop:      ; do ... while loop
         inc cl              ; Increase number of tries
@@ -67,8 +68,8 @@ kodikas segment
         jb start_loop       ; Continue loop if tries are below max_tries
 
     exit:
-        mov ah, 4ch         ; Exit program, standard instructions
-        int 21h             ; Exit program, standard instructions
+        mov ah, 4ch         ; Exit program, standard instructions 1/2
+        int 21h             ; Exit program, standard instructions 2/2
 
 kodikas ends
 
