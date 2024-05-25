@@ -28,17 +28,17 @@ kodikas segment
         ;mov bx, ax  ; Temporary store ax to bx because BIOS destroys ax value after print message
 
         lea dx, msg         ; Print message standard instructions 1/3
-        mov ah, 9           ; Print message standard instructions 2/3
+        mov ah, 9h          ; Print message standard instructions 2/3
         int 21h             ; Print message standard instructions 3/3
 
         mov dl, bl          ; Print number standard instructions (1st digit) 1/4
         add dl, 48          ; Print number standard instructions (1st digit) 2/4
-        mov ah, 2           ; Print number standard instructions (1st digit) 3/4
+        mov ah, 2h          ; Print number standard instructions (1st digit) 3/4
         int 21h             ; Print number standard instructions (1st digit) 4/4
 
         mov dl, bh          ; Print number standard instructions (2nd digit) 1/4
         add dl, 48          ; Print number standard instructions (2nd digit) 2/4
-        mov ah, 2           ; Print number standard instructions (2nd digit) 3/4
+        mov ah, 2h          ; Print number standard instructions (2nd digit) 3/4
         int 21h             ; Print number standard instructions (2nd digit) 4/4
 
         mov ah, 4ch         ; Standard instructions to exit the program 1/2
