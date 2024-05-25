@@ -2,8 +2,8 @@ title askisi2
 kodikas segment
     assume cs: kodikas, ds: dedomena
     start:
-        mov ax, dedomena
-        mov ds, ax    
+        mov ax, dedomena ; Declaration of data segment standard sequence
+        mov ds, ax ; Declaration of data segment standard sequence
         
         mov cl, 0           ; Initialize tries. Temporary use of cl
         
