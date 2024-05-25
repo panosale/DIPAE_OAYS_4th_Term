@@ -1,4 +1,4 @@
-title askisi1.2 ; Calculate (n^2-2*n)+1 with 2 digits result
+title askisi1.2 ; Calculate n^2-2*n+1 with 2 digits result
 kodikas segment
     assume cs: kodikas, ds: dedomena
     start:
