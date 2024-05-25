@@ -1,4 +1,4 @@
-title askisi1
+title askisi1 ; Calculate (n^2-2*n)+1 with 1 digit result
 kodikas segment
     assume cs: kodikas, ds: dedomena
     start:
@@ -33,8 +33,8 @@ kodikas segment
 kodikas ends
 
 dedomena segment
-    n db 2
-    message db "To apotelesma einai: $"
+    n db 2 ; Store 2 to variable "$n"
+    message db "To apotelesma einai: $" ; Store output message to "$message"
     ;newline db ".", 10, 13, "$"    ; Gia mellontiki xrisi
 dedomena ends
 end start
