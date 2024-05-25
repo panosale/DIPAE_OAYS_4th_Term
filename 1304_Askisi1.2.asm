@@ -1,4 +1,4 @@
-title askisi1.2
+title askisi1.2 ; Calculate (n^2-2*n)+1 with 2 digits result
 kodikas segment
     assume cs: kodikas, ds: dedomena
     start:
@@ -20,7 +20,7 @@ kodikas segment
         ;add ax, 1   ; Add 1 to ax
 
         ; Standard series for seperate 2 digit number
-        mov cl, 10  ; Move division 2nd operand to cl
+        mov cl, 10  ; Move division 2nd operand (10) to cl
         div cl      ; Div ax by cl (10)
         mov bh, ah  ; Temporary store div result on ah to bh (remaining)
         mov bl, al  ; Temporary store div result on al to bl (quotient)
@@ -47,7 +47,7 @@ kodikas segment
 kodikas ends
 
 dedomena segment
-    n db 6
-    msg db "To apotelesma einai: $"
+    n db 6 ; Store 6 to variable n
+    msg db "To apotelesma einai: $" ; Store output message to msg
 dedomena ends
 end start
