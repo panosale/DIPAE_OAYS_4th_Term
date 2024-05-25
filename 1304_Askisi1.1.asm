@@ -6,10 +6,10 @@ kodikas segment
         mov ds, ax
 
         mov al, n   ; Store n to al
-        mul n       ; Multiply al with n (n^2)
+        mul n       ; Multiply al with n (n*n)
         mov bl, al  ; Temporary store multiply result to bl
 
-        mov al, 2   ; Store n to al again
+        mov al, 2   ; Store 2 to al
         mul n       ; Multiply al with 2 (n*2)
         mov cl, al  ; Temporary store multiply result to cl
 
