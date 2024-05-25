@@ -18,18 +18,17 @@ kodikas segment
         add al, 1   ; Add 1 to al
         mov bl, al  ; Temporary store al to bl because BIOS destroys al value after print message
 
+        lea dx, message; Prepare to print message 
+        mov ah, 9; Prepare to print message
+        int 21h ; Call 21h function to print on screen
 
-        lea dx, message
-        mov ah, 9
-        int 21h
+        mov dl, bl ; Move to dl the temporary stored value of bl
+        add dl, 48 ; Add 48 to value of dl in order to print number (48 is the ASCII code of 0)
+        mov ah, 2 ; Prepare to print number ENSURE THAT 
+        int 21h ; Call 21h function to print on screen
 
-        mov dl, bl
-        add dl, 48
-        mov ah, 2
-        int 21h
-
-        mov ah, 4ch
-        int 21h
+        mov ah, 4ch ; End program standard sequence
+        int 21h ; End program standard sequence
 
 kodikas ends
 
