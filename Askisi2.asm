@@ -18,10 +18,10 @@ kodikas segment
         int 21h             ; Ask for a number, standard instructions
         
         cmp al, '0'         ; Compare given number to 0
-        jb gave_wrong_entry ; Check if given number is below 0
+        jb gave_wrong_entry ; Check if given number is below 0 (compares ASCII codes)
         
         cmp al, '9'         ; Copmare given number to 9
-        ja gave_wrong_entry ; Check if given number is above 9
+        ja gave_wrong_entry ; Check if given number is above 9 (compares ASCII codes)
         
         mov dl, al          ; Given number is correct and can be printed
         mov ah, 2h          ; Given number is correct and can be printed
