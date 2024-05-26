@@ -11,7 +11,7 @@ kodikas segment
     
     ask_for_number:        
         lea dx, prompt_msg  ; Print message, standard instructions 1/3
-        mov ah, 9           ; Print message, standard instructions 2/3
+        mov ah, 9h          ; Print message, standard instructions 2/3
         int 21h             ; Print message, standard instructions 3/3
         
         mov ah, 8h          ; Ask for a number, standard instructions 1/2
@@ -31,13 +31,14 @@ kodikas segment
         cmp al, '0'         ; Check if given number is zero
         je zero             ; If given number is zero jump to "zero"
         
-        mov bl, 2           ; Check if given number is artios
-        mov ah, 0           ; Check if given number is artios
-        div bl              ; Check if given number is artios
-        cmp ah, 0           ; Check if given number is artios
-        je artios           ; Check if given number is artios
+        ; Check if given number is artios
+        mov bl, 2           ; Store 2 to bl 
+        mov ah, 0           ; Initialize ah with 0
+        div bl              ; Divide ah by bh (2)
+        cmp ah, 0           ; Compare if ah (remaining) is 0 
+        je artios           ; If remaining (ah) is 0 then given number is even (artios)
         
-        jmp perittos        ; If given number is not zero or artios then it means its perittos
+        jmp perittos        ; If given number is not zero or artios then it means its odd (perittos)
         
     gave_wrong_entry:
         lea dx, wrong_entry ; Print message, standard instructions 1/3
@@ -62,7 +63,7 @@ kodikas segment
         mov ah, 9h          ; Print message, standard instructions 2/3
         int 21h             ; Print message, standard instructions 3/3
         
-    continue_loop:      ; do ... while loop
+    continue_loop:          ; do ... while loop
         inc cl              ; Increase number of tries
         cmp cl, max_tries   ; Compare number of tries
         jb start_loop       ; Continue loop if tries are below max_tries

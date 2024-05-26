@@ -1,31 +1,30 @@
-
 title askisi3
+start:
+assume cs: kodikas, ds: dedomena
 kodikas segment
-    assume cs: kodikas, ds: dedomena
-    start:
-        mov ax, dedomena
-        mov ds, ax    
+        mov ax, dedomena            ; Standard instructions for declaration of data segment 1/2
+        mov ds, ax                  ; Standard instructions for declaration of data segment 2/2    
         
-        mov si, 0                   ; Initialize index
+        mov si, 0                   ; Initialize given text index
         mov cx, 40                  ; Initialize CX index for loop
         
-        lea dx, PROMPT_MSG          ; Print message, standard instructions
-        mov ah, 9                   ; Print message, standard instructions
-        int 21h                     ; Print message, standard instructions
+        lea dx, PROMPT_MSG          ; Print message, standard instructions 1/3
+        mov ah, 9                   ; Print message, standard instructions 2/3
+        int 21h                     ; Print message, standard instructions 3/3
         
     start_loop:                     ; Main prompt for character loop
     
     ask_for_text:        
-        mov ah, 1h                  ; Ask for a character, standard instructions
-        int 21h                     ; Ask for a character, standard instructions
+        mov ah, 1h                  ; Ask for a character, standard instructions 1/2
+        int 21h                     ; Ask for a character, standard instructions 2/2
         
-        cmp al, 13                  ; Compare given character with Enter
+        cmp al, 13                  ; Compare given character with ENTER
         je enter_pressed            ; Finish the prompt. Exit loop
 
-        cmp al, ' '                 ; Compare given character with Space...
+        cmp al, ' '                 ; Compare given character with SPACE...
         je save_to_buffer           ; ...and save it to BUFFER 
         
-        cmp al, '.'                 ; Compare given character with Point(.)...
+        cmp al, '.'                 ; Compare given character with POINT(.)...
         je save_to_buffer           ; ...and save it to BUFFER
         
         cmp al, 'A'                 ; Check if given character is below 'A'...
@@ -50,13 +49,14 @@ kodikas segment
     enter_pressed:
         cmp si, 0                   ; Check if no text given...
         je no_text_given            ; ...and show message
-                                    ; ...else continue on showing converted text
-    emfanisi:
-        lea dx, MSG_CONVERTED_TEXT  ; Print message, standard instructions
-        mov ah, 9h                  ; Print message, standard instructions
-        int 21h                     ; Print message, standard instructions
+                                    
+    ; ...else continue on showing converted text
+    emfanisi:                       
+        lea dx, MSG_CONVERTED_TEXT  ; Print message, standard instructions 1/3
+        mov ah, 9h                  ; Print message, standard instructions 2/3
+        int 21h                     ; Print message, standard instructions 3/3
 
-                                    ; Start print BUFFER procedure
+        ; Start print BUFFER procedure
         mov cx, si                  ; Initialize counter for BUFFER print with loop
         lea bx, BUFFER              ; Print BUFFER instructions 
         
@@ -85,13 +85,13 @@ kodikas segment
         jmp exit                    ; Print finished. End program                    
         
     no_text_given:
-        lea dx, MSG_NO_TEXT         ; Print message, standard instructions
-        mov ah, 9h                  ; Print message, standard instructions
-        int 21h                     ; Print message, standard instructions
+        lea dx, MSG_NO_TEXT         ; Print message, standard instructions 1/3
+        mov ah, 9h                  ; Print message, standard instructions 2/3
+        int 21h                     ; Print message, standard instructions 3/3
 
     exit:
-        mov ah, 4ch                 ; Exit program, standard instructions
-        int 21h                     ; Exit program, standard instructions
+        mov ah, 4ch                 ; Exit program, standard instructions 1/2
+        int 21h                     ; Exit program, standard instructions 2/2
 
 kodikas ends
 

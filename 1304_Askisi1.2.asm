@@ -1,6 +1,6 @@
 title askisi1.2             ; Calculate n^2-2*n+1 with 2 digits result
-assume cs: kodikas, ds: dedomena
 start:
+assume cs: kodikas, ds: dedomena
 kodikas segment
         mov ax, dedomena    ; Standard sequence for declaration of data segment 1/2
         mov ds, ax          ; Standard sequence for declaration of data segment 1/2
