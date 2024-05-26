@@ -9,7 +9,7 @@ kodikas segment
             mov cx, 80                  ; Initialize CX index for loop
             
             lea dx, PROMPT_MSG1         ; Print message, standard instructions 1/3
-            mov ah, 9                   ; Print message, standard instructions 2/3
+            mov ah, 9h                  ; Print message, standard instructions 2/3
             int 21h                     ; Print message, standard instructions 3/3
             
         start_loop:                     ; Main prompt for character loop
@@ -18,7 +18,7 @@ kodikas segment
             mov ah, 1h                  ; Ask for a character, standard instructions 1/2
             int 21h                     ; Ask for a character, standard instructions 2/2
             
-            cmp al, '#'                 ; Compare given character with Sharp (#)
+            cmp al, '#'                 ; Compare given character with SHARP (#)
             je sharp_pressed            ; Finish the prompt. Exit loop
             
         save_to_buffer:
@@ -43,7 +43,7 @@ kodikas segment
     
     check-given-char proc near
         lea dx, PROMPT_MSG2             ; Print message, standard instructions 1/3
-        mov ah, 9                       ; Print message, standard instructions 2/3
+        mov ah, 9h                      ; Print message, standard instructions 2/3
         int 21h                         ; Print message, standard instructions 3/3
         
         mov cx, si
@@ -53,53 +53,65 @@ kodikas segment
         mov ah, 1h                      ; Ask for a character, standard instructions 1/2
         int 21h                         ; Ask for a character, standard instructions 2/2
 
-        loop_elegxou:
-            mov dl, BUFFER[si]          ; Add content of bx address to dl
-            inc si                      ; Increase bx address by 1
+        loop_elegxou:                   ; Search given character in given text with loop
+            mov dl, BUFFER[si]          ; Add character of BUFFER on [si] position to dl
+            inc si                      ; Increase BUFFER index [si] by 1
 
-            cmp dl, al
-            jne character_not_found
-            inc bx            
+            cmp dl, al                  ; Compare given character with character in BUFFER[si] postion
+            jne character_not_found     ; Character not found in current position. Go to next BUFFER position
+            inc bx                      ; Character found in current possition, so increase found counter (bx)
             character_not_found:
-        loop loop_elegxou
-        
-        mov TMP_CHAR, al     
-        mov ax, bx
+                loop loop_elegxou       ; Continue search loop
+        cmp bx, 0
+        je character_not_found_message
+                
+        mov TMP_CHAR, al                ; Store al to temporary variable     
+        mov ax, bx                      ; Store count of found (bx) to al
         ; Standard series for seperate 2 digit number
-        mov cl, 10  ; Move division 2nd operand to cl
-        div cl      ; Div ax by cl (10)
-        mov bh, ah  ; Temporary store div result on ah to bh (remaining)
-        mov bl, al  ; Temporary store div result on al to bl (quotient)
+        mov cl, 10                      ; Move division 2nd operand to cl
+        div cl                          ; Div ax by cl (10)
+        mov bh, ah                      ; Temporary store div result on ah to bh (remaining)
+        mov bl, al                      ; Temporary store div result on al to bl (quotient)
 
+        ; Start printing search result
         lea dx, RESULT_MSG1             ; Print message, standard instructions 1/3
-        mov ah, 9                       ; Print message, standard instructions 2/3
+        mov ah, 9h                      ; Print message, standard instructions 2/3
         int 21h                         ; Print message, standard instructions 3/3
 
         mov ax, 0
         mov al, TMP_CHAR
         lea dx, ax                      ; Print message, standard instructions 1/3
-        mov ah, 2                       ; Print message, standard instructions 2/3
+        mov ah, 2h                      ; Print message, standard instructions 2/3
         int 21h                         ; Print message, standard instructions 3/3
 
         lea dx, RESULT_MSG2             ; Print message, standard instructions 1/3
-        mov ah, 9                       ; Print message, standard instructions 2/3
+        mov ah, 9h                      ; Print message, standard instructions 2/3
         int 21h                         ; Print message, standard instructions 3/3
 
-        mov dl, bl                      ; Print number standard series (1st digit)
-        add dl, 48                      ; Print number standard series (1st digit)
-        mov ah, 2                       ; Print number standard series (1st digit)
-        int 21h                         ; Print number standard series (1st digit)
-        cmp bx, 9
-        jna dont_print_second_character
-        mov dl, bh                      ; Print number standard series (2nd digit)
-        add dl, 48                      ; Print number standard series (2nd digit)
-        mov ah, 2                       ; Print number standard series (2nd digit)
-        int 21h                         ; Print number standard series (2nd digit)
-        lea dx, RESULT_MSG3             ; Print message, standard instructions
-        mov ah, 9                       ; Print message, standard instructions
-        int 21h                         ; Print message, standard instructions
-    dont_print_second_character:        
-        ret        
+        cmp bl, 0
+        jna dont_print_first_digit
+            mov dl, bl                  ; Print number standard series (2nd digit) 1/4
+            add dl, 48                  ; Print number standard series (2nd digit) 2/4 (Add 48 to it's ASCII code)
+            mov ah, 2h                  ; Print number standard series (2nd digit) 3/4
+            int 21h                     ; Print number standard series (2nd digit) 4/4
+
+        dont_print_first_digit:        
+            mov dl, bh                  ; Print number standard series (2nd digit) 1/4
+            add dl, 48                  ; Print number standard series (2nd digit) 2/4 (Add 48 to it's ASCII code)
+            mov ah, 2h                  ; Print number standard series (2nd digit) 3/4
+            int 21h                     ; Print number standard series (2nd digit) 4/4
+        
+        lea dx, RESULT_MSG3             ; Print message, standard instructions 1/3
+        mov ah, 9h                      ; Print message, standard instructions 2/3
+        int 21h                         ; Print message, standard instructions 3/3
+        jmp exit_function
+        
+        character_not_found_message:
+            lea dx, CHAR_NOT_FOUND_MSG  ; Print message, standard instructions 1/3
+            mov ah, 9h                  ; Print message, standard instructions 2/3
+            int 21h                     ; Print message, standard instructions 3/3
+        exit_function:
+            ret
     check-given-char endp        
     
 kodikas ends
@@ -113,7 +125,8 @@ dedomena segment
     RESULT_MSG1 db 10,13, "O charaktiras [$"
     RESULT_MSG2 db "] vrethike [$"
     RESULT_MSG3 db "] fores.$"
-    MSG_NO_TEXT db "Den dosate kanena keimeno.$"
+    CHAR_NOT_FOUND_MSG db 10,13, "O charaktiras den vrethike.$"
+    MSG_NO_TEXT db "Den edoses kanena keimeno.$"
 dedomena ends
 
 soros segment stack
