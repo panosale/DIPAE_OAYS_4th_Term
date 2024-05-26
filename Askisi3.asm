@@ -18,7 +18,8 @@ kodikas segment
         mov ah, 1h                  ; Ask for a character, standard instructions 1/2
         int 21h                     ; Ask for a character, standard instructions 2/2
         
-        cmp al, 13                  ; Compare given character with ENTER
+        ; Given character stored in al and now start checks below
+        cmp al, 0dh                 ; Compare given character with ENTER (asci 13, or odh)
         je enter_pressed            ; Finish the prompt. Exit loop
 
         cmp al, ' '                 ; Compare given character with SPACE...
@@ -61,25 +62,25 @@ kodikas segment
         lea bx, BUFFER              ; Print BUFFER instructions 
         
     loop_emfanisis:
-        mov dl, [bx]                ; Add content of bx address to dl
-        inc bx                      ; Increase bx address by 1
+        mov dl, [bx]                ; Add content of bx address to dl (next BUFFER character)
+        inc bx                      ; Increase bx address by 1 (prepare bx for next BUFFER character)
         
-        cmp dl, ' '                 ; Check if current character is Space...
-        je emfanisi_allagmenou_charaktira 
-        cmp dl, '.'                 ; ...else check if current character is Point(.)...
-        je emfanisi_allagmenou_charaktira
+        cmp dl, ' '                 ; Check if current character is SPACE...
+        je emfanisi_charaktira 
+        cmp dl, '.'                 ; ...else check if current character is POINT(.)...
+        je emfanisi_charaktira
         
         cmp dl, 'a'                 ; ...else check if character is in lowercase
         jae convert_to_uppercase    ; If in lowercase then convert to uppercase...
         add dl, 32                  ; ...else convert current character to lowercase (ascii + 32)
-        jmp emfanisi_allagmenou_charaktira
+        jmp emfanisi_charaktira
         
         convert_to_uppercase:       
             sub dl, 32              ; Convert current character to uppercase (ascii - 32)
              
-        emfanisi_allagmenou_charaktira:
-            mov ah, 2h              ; Print character, standard instructions
-            int 21h                 ; Print character, standard instructions
+        emfanisi_charaktira:
+            mov ah, 2h              ; Print character, standard instructions 1/2
+            int 21h                 ; Print character, standard instructions 2/2
         loop loop_emfanisis         ; Continue loop until all characters finish (cx = 0)
             
         jmp exit                    ; Print finished. End program                    
@@ -88,6 +89,7 @@ kodikas segment
         lea dx, MSG_NO_TEXT         ; Print message, standard instructions 1/3
         mov ah, 9h                  ; Print message, standard instructions 2/3
         int 21h                     ; Print message, standard instructions 3/3
+        ; ...and continue to exit procedure
 
     exit:
         mov ah, 4ch                 ; Exit program, standard instructions 1/2
@@ -96,8 +98,7 @@ kodikas segment
 kodikas ends
 
 dedomena segment     
-    BUFFER db 40 dup(0)
-    
+    BUFFER db 40 dup(0)              ; Store 40 zeros to array "BUFFER". Means initialization of BUFFER
     PROMPT_MSG db "Eisagete keimeno (A-Z, a-z,teleia, space): $"
     MSG_CONVERTED_TEXT db 10, 13, "To keimeno meta tin metatropi: $"
     MSG_NO_TEXT db 10, 13, "Den dosate kanena keimeno.$"
